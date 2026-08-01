@@ -8,6 +8,7 @@ import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
 import employeeRouter from './routes/employee.js';
 import attendanceRouter from './routes/attendance.js';
+import leaveRouter from './routes/leave.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { sendError } from './utils/response.js';
 import logger from './utils/logger.js';
@@ -41,6 +42,7 @@ app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/employees', employeeRouter);
 app.use('/api/attendance', attendanceRouter);
+app.use('/api/leaves', leaveRouter);
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
