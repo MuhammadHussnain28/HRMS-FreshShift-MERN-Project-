@@ -6,9 +6,11 @@ import morgan from 'morgan';
 import './config/env.js';
 import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
-import employeeRouter from './routes/employee.js';
-import attendanceRouter from './routes/attendance.js';
-import leaveRouter from './routes/leave.js';
+import employeeRoutes from './routes/employee.js';
+import attendanceRoutes from './routes/attendance.js';
+import leaveRoutes from './routes/leave.js';
+import announcementRoutes from './routes/announcement.js';
+import payrollRoutes from './routes/payroll.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { sendError } from './utils/response.js';
 import logger from './utils/logger.js';
@@ -40,9 +42,11 @@ if (process.env.NODE_ENV !== 'test') {
 // API Routes
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/employees', employeeRouter);
-app.use('/api/attendance', attendanceRouter);
-app.use('/api/leaves', leaveRouter);
+app.use('/api/employees', employeeRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/leaves', leaveRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/payroll', payrollRoutes);
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
