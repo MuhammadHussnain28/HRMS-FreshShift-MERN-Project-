@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      JWT_ACCESS_SECRET: dummy-test-access-secret
+      JWT_REFRESH_SECRET: dummy-test-refresh-secret
 
     strategy:
       matrix:
