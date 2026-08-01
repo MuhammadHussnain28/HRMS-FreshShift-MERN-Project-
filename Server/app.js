@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import './config/env.js';
 import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
+import employeeRouter from './routes/employee.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { sendError } from './utils/response.js';
 import logger from './utils/logger.js';
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV !== 'test') {
 // API Routes
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/employees', employeeRouter);
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
