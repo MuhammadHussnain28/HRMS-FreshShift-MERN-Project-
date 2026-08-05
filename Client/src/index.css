@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  /* Locked Palette — FRONTEND_SPEC Section 10 */
+  --color-navy: #1E293B;
+  --color-navy-dark: #0F172A;
+  --color-teal: #0284C7;
+  --color-teal-dark: #0369A1;
+  --color-skyblue: #E0F2FE;
+  --color-beige: #F8FAFC;
+  --color-fresh-red: #DC2626;
+  --color-muted-text: #64748B;
+  --color-border: #E2E8F0;
+
+  /* Status Colors — muted, enterprise grade */
+  --color-status-approved: #15803D;
+  --color-status-approved-bg: #DCFCE7;
+  --color-status-pending: #B45309;
+  --color-status-pending-bg: #FEF3C7;
+  --color-status-rejected: #B91C1C;
+  --color-status-rejected-bg: #FEE2E2;
+  --color-status-inactive: #475569;
+  --color-status-inactive-bg: #F1F5F9;
+
+  /* Typography */
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Border Radius */
+  --radius-lg: 0.5rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+}
+
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-navy);
+    background-color: #ffffff;
+    line-height: 1.625;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+/* Custom UI/UX Pro Max Utilities */
+.glass-border {
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.subtle-card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+}
+
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+/* Slightly clearer & brighter Dot-Grid Hero Texture */
+.bg-grid-dots {
+  background-image: radial-gradient(rgba(2, 132, 199, 0.3) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+}
