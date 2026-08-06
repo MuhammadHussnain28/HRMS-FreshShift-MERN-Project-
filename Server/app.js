@@ -14,8 +14,19 @@ import payrollRoutes from './routes/payroll.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { sendError } from './utils/response.js';
 import logger from './utils/logger.js';
+import { connectDB } from './config/db.js';
 
 const app = express();
+
+// Auto-connect DB middleware for serverless execution
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Security middlewares
 app.use(helmet());

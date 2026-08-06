@@ -41,7 +41,7 @@ const transports = [
   }),
 ];
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   transports.push(
     new winston.transports.File({
       filename: 'logs/error.log',
