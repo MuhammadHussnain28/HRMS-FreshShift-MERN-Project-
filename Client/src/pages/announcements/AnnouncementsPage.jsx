@@ -109,7 +109,7 @@ export default function AnnouncementsPage() {
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Executive Newsroom Hero Artwork Banner */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-xl text-white">
+      <div className="relative bg-slate-900 rounded-3xl overflow-hidden shadow-xl text-white">
         <div className="absolute inset-0 opacity-25">
           <img src={boardroomImg} alt="Corporate Executive Teamwork" className="w-full h-full object-cover" />
         </div>
@@ -223,31 +223,28 @@ export default function AnnouncementsPage() {
       </div>
 
       {/* Add / Edit Announcement Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
-            />
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
+          />
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 z-10"
-            >
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
-                <h3 className="text-lg font-extrabold text-slate-900">
-                  {editingAnnouncement ? 'Edit Announcement' : 'Post New Announcement'}
-                </h3>
-                <button onClick={() => setIsModalOpen(false)} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+          <div
+            className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 z-10"
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+              <h3 className="text-lg font-extrabold text-slate-900">
+                {editingAnnouncement ? 'Edit Announcement' : 'Post New Announcement'}
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Close dialog"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
@@ -301,10 +298,9 @@ export default function AnnouncementsPage() {
                   </Button>
                 </div>
               </form>
-            </motion.div>
+            </div>
           </div>
         )}
-      </AnimatePresence>
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog

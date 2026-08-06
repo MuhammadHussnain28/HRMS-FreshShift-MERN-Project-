@@ -148,6 +148,20 @@ describe('Payroll Endpoints & Logic', () => {
         .set('Authorization', `Bearer ${emp2Token}`); // Emp2 trying to download Emp1's slip
 
       expect(blockRes.status).toBe(403);
+
+      // 5. Block Payroll Generation Prior to Joining Date
+      await User.findByIdAndUpdate(emp1Id, { joiningDate: '2026-01-10T00:00:00Z' });
+      const priorRes = await request(app)
+        .post('/api/payroll/generate')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          employeeId: emp1Id,
+          month: 11,
+          year: 2025
+        });
+
+      expect(priorRes.status).toBe(400);
+      expect(priorRes.body.error.message).toContain('prior to employee joining date');
     });
   });
 });

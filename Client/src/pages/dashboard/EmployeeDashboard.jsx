@@ -44,7 +44,7 @@ export default function EmployeeDashboard() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-10">
       {/* BLOCK 1: Executive Greeting Hero Header featuring Dashnoard-img1.svg */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 text-white">
+      <div className="relative bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 text-white">
         {/* <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 lg:opacity-30 pointer-events-none hidden md:block border-3 border-yellow">
           <img src={dashboardImg1} alt="Employee Dashboard Graphics" className="w-80 h-80 object-contain object-right p-4" />
         </div> */}
@@ -79,7 +79,7 @@ export default function EmployeeDashboard() {
               <span>Role: <strong className="text-white capitalize">{user?.designation || user?.role}</strong></span>
             </div>
             <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-              <Calendar className="w-3.5 h-3.5 text-purple-400" />
+              <Calendar className="w-3.5 h-3.5 text-sky-400" />
               <span>Today: <strong className="text-white">{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</strong></span>
             </div>
           </div>
@@ -160,13 +160,13 @@ export default function EmployeeDashboard() {
                   {balance?.annual ? balance.annual.remaining : 14} <span className="text-xs font-semibold text-slate-400">/ {balance?.annual ? balance.annual.allowed : 14} Days</span>
                 </h4>
               </div>
-              <div className="p-2.5 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100">
+              <div className="p-2.5 bg-sky-50 text-teal rounded-2xl border border-sky-100">
                 <CalendarDays className="w-5 h-5" />
               </div>
             </div>
             <div className="mt-4 w-full bg-slate-100 h-2 rounded-full overflow-hidden">
               <div 
-                className="bg-purple-500 h-full rounded-full transition-all duration-500" 
+                className="bg-teal h-full rounded-full transition-all duration-500" 
                 style={{ width: `${Math.min(100, ((balance?.annual?.used || 0) / (balance?.annual?.allowed || 14)) * 100)}%` }}
               />
             </div>
@@ -220,7 +220,7 @@ export default function EmployeeDashboard() {
           <div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-purple-600" /> Recent Leave Applications
+                <FileText className="w-4 h-4 text-teal" /> Recent Leave Applications
               </h3>
               <Link to="/leaves" className="text-xs font-bold text-teal hover:underline flex items-center gap-1">
                 Apply Leave <ArrowRight className="w-3.5 h-3.5" />

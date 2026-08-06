@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clockIn, clockOut } from '../../redux/slices/attendanceSlice';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { 
@@ -102,7 +101,7 @@ export default function ClockCard() {
   // 1. Clocked Out State
   if (todayRecord?.clockOut) {
     return (
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+      <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="p-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-2xl shrink-0">
@@ -133,7 +132,7 @@ export default function ClockCard() {
   // 2. Clocked In State
   if (todayRecord?.clockIn && !todayRecord?.clockOut) {
     return (
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+      <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="p-4 bg-teal/20 border border-teal/40 text-sky-400 rounded-2xl shrink-0 animate-pulse">
@@ -159,7 +158,7 @@ export default function ClockCard() {
               <span className="text-2xl font-black text-sky-300 font-mono tracking-wider mt-0.5 block">{elapsedTime}</span>
             </div>
 
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <div>
               <Button
                 onClick={handleClockOut}
                 disabled={isSubmitting}
@@ -175,7 +174,7 @@ export default function ClockCard() {
                   </>
                 )}
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -196,7 +195,7 @@ export default function ClockCard() {
           </div>
         </div>
 
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+        <div className="w-full sm:w-auto">
           <Button
             onClick={handleClockIn}
             disabled={isSubmitting}
@@ -212,7 +211,7 @@ export default function ClockCard() {
               </>
             )}
           </Button>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

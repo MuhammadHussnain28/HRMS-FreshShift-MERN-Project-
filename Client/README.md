@@ -1,16 +1,72 @@
-# React + Vite
+# FreshShifts HRMS — React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The client-side web application for FreshShifts HRMS, built with React 19, Redux Toolkit, Tailwind CSS v4, and Vite.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🔑 Demo Login Accounts
 
-## React Compiler
+| Role | Email | Password |
+|---|---|---|
+| **HR Administrator** | `admin@freshshifts.com` | `Admin@123` |
+| **Employee** | `ali.hassan@freshshifts.com` | `Employee@123` |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 🛠️ Tech Stack & Libraries
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- **Framework:** React 19 + Vite
+- **State Management:** Redux Toolkit (`createSlice`, `createAsyncThunk`)
+- **Styling & Icons:** Tailwind CSS v4, Lucide Icons, Shadcn UI primitives
+- **Form Management:** `react-hook-form` + `zod` validation schemas
+- **Charts & Data Visuals:** Recharts (`ResponsiveContainer`, `BarChart`)
+- **Animation:** Framer Motion (scoped strictly to Section 12 sanctioned moments)
+- **Toast Notifications:** Sonner
+
+---
+
+## 📁 Frontend Architecture
+
+```
+Client/
+├── src/
+│   ├── app/                 # Redux store configuration
+│   ├── components/          # Reusable UI components
+│   │   ├── attendance/      # ClockCard component
+│   │   ├── layout/          # AppLayout, Topbar, Sidebar, MobileNav
+│   │   ├── shared/          # ConfirmDialog, ErrorState, EmptyState, StatusBadge
+│   │   └── ui/              # Shadcn UI primitives (button, dialog, input, card)
+│   ├── hooks/               # useAuth custom hook
+│   ├── lib/                 # Shared utilities (axiosInstance, validators)
+│   ├── pages/               # Application view screens
+│   │   ├── announcements/   # AnnouncementsPage
+│   │   ├── attendance/      # AttendancePage, AdminAttendancePage
+│   │   ├── auth/            # LoginPage
+│   │   ├── dashboard/       # DashboardPage, EmployeeDashboard, AdminDashboard
+│   │   ├── employees/       # EmployeesListPage, AddEmployeeModal, EditEmployeeModal
+│   │   ├── errors/          # UnauthorizedPage
+│   │   ├── leaves/          # LeavesPage, AdminLeavesPage, AiRecommendationBadge
+│   │   ├── payroll/         # PayrollPage, AdminPayrollPage
+│   │   └── profile/         # ProfilePage
+│   ├── redux/               # Redux slices (auth, employees, attendance, leave, announcements, payroll)
+│   └── routes/              # Route guards (ProtectedRoute, PublicRoute, RoleRoute)
+└── package.json
+```
+
+---
+
+## 🚀 Environment Variables
+
+Create `.env` inside `Client/`:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+---
+
+## 💻 Available Scripts
+
+- `npm run dev` — Starts the local Vite development server
+- `npm run build` — Compiles production bundle into `dist/`
+- `npm run preview` — Locally previews the built production bundle

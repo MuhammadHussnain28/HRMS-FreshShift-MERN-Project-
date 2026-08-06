@@ -153,13 +153,13 @@ export default function LeavesPage() {
                 {balance?.annual ? balance.annual.remaining : 14} <span className="text-sm font-semibold text-slate-400">/ {balance?.annual ? balance.annual.allowed : 14} Days</span>
               </h3>
             </div>
-            <div className="p-2.5 bg-purple-50 text-purple-600 rounded-2xl border border-purple-100">
+            <div className="p-2.5 bg-sky-50 text-teal rounded-2xl border border-sky-100">
               <CalendarDays className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-4 w-full bg-slate-100 h-2 rounded-full overflow-hidden">
             <div 
-              className="bg-purple-500 h-full rounded-full transition-all duration-500" 
+              className="bg-teal h-full rounded-full transition-all duration-500" 
               style={{ width: `${Math.min(100, ((balance?.annual?.used || 0) / (balance?.annual?.allowed || 14)) * 100)}%` }}
             />
           </div>

@@ -99,7 +99,7 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-10">
       {/* BLOCK 1: Executive Operations Hero Header featuring Dashboard_img2.svg */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 text-white">
+      <div className="relative bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 text-white">
         <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 lg:opacity-35 pointer-events-none hidden md:block">
           <img src={dashboardImg2} alt="Executive Operations Hub Graphics" className="w-full h-full object-contain object-right p-4" />
         </div>

@@ -102,6 +102,7 @@ export default function EmployeesListPage() {
           </div>
           <input
             type="text"
+            aria-label="Search employees"
             placeholder="Search by name, email, department, or designation..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

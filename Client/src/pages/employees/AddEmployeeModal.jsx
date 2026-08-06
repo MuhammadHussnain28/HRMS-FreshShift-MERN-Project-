@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch } from 'react-redux';
@@ -95,45 +94,39 @@ export default function AddEmployeeModal({ isOpen, onClose }) {
     onClose();
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={createdCredentials ? handleCloseAll : onClose}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
-          />
+  if (!isOpen) return null;
 
-          {/* Modal Container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 sm:p-8 z-10 my-8 overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-teal/10 border border-teal/20 text-teal rounded-2xl">
-                  <UserPlus className="w-6 h-6" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Onboard New Employee</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Decision #4 Grouped Onboarding Flow</p>
-                </div>
-              </div>
-              <button
-                onClick={createdCredentials ? handleCloseAll : onClose}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        onClick={createdCredentials ? handleCloseAll : onClose}
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
+      />
+
+      {/* Modal Container */}
+      <div
+        className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 sm:p-8 z-10 my-8 overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-teal/10 border border-teal/20 text-teal rounded-2xl">
+              <UserPlus className="w-6 h-6" />
             </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Onboard New Employee</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Decision #4 Grouped Onboarding Flow</p>
+            </div>
+          </div>
+          <button
+            onClick={createdCredentials ? handleCloseAll : onClose}
+            aria-label="Close dialog"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
             {/* Follow-up Confirmation Dialog for Generated Credentials */}
             {createdCredentials ? (
@@ -341,9 +334,7 @@ export default function AddEmployeeModal({ isOpen, onClose }) {
                 </div>
               </form>
             )}
-          </motion.div>
+          </div>
         </div>
-      )}
-    </AnimatePresence>
   );
 }

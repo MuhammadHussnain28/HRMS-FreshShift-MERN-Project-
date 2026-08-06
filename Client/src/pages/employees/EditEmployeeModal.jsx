@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch } from 'react-redux';
@@ -52,44 +51,38 @@ export default function EditEmployeeModal({ isOpen, employee, onClose }) {
     }
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && employee && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
-          />
+  if (!isOpen || !employee) return null;
 
-          {/* Modal Content */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 sm:p-8 z-10 my-8 overflow-hidden"
-          >
-            <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-sky-50 border border-sky-100 text-teal rounded-2xl">
-                  <Edit3 className="w-6 h-6" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Employee Profile</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Updating record for {employee.name}</p>
-                </div>
-              </div>
-              <button
-                onClick={onClose}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200"
+      />
+
+      {/* Modal Content */}
+      <div
+        className="relative bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 sm:p-8 z-10 my-8 overflow-hidden"
+      >
+        <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-sky-50 border border-sky-100 text-teal rounded-2xl">
+              <Edit3 className="w-6 h-6" />
             </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Edit Employee Profile</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Updating record for {employee.name}</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-h-[70vh] overflow-y-auto pr-1">
               {/* Personal Identity Group */}
@@ -231,9 +224,7 @@ export default function EditEmployeeModal({ isOpen, employee, onClose }) {
                 </Button>
               </div>
             </form>
-          </motion.div>
+          </div>
         </div>
-      )}
-    </AnimatePresence>
   );
 }

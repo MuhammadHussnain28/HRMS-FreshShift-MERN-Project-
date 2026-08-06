@@ -89,8 +89,31 @@ export const computeAbsentDays = async (employeeId, month, year) => {
 
 export const generatePayroll = async (employeeId, month, year, generatedBy) => {
   const user = await User.findById(employeeId);
-  if (!user) throw new Error('Employee not found');
-  if (!user.monthlySalary) throw new Error('Employee has no base salary configured');
+  if (!user) {
+    const err = new Error('Employee not found');
+    err.statusCode = 404;
+    throw err;
+  }
+  if (!user.monthlySalary) {
+    const err = new Error('Employee has no base salary configured');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  if (user.joiningDate) {
+    const joining = new Date(user.joiningDate);
+    const joiningYear = joining.getUTCFullYear();
+    const joiningMonth = joining.getUTCMonth() + 1;
+
+    const numYear = Number(year);
+    const numMonth = Number(month);
+
+    if (numYear < joiningYear || (numYear === joiningYear && numMonth < joiningMonth)) {
+      const err = new Error(`Cannot generate payroll for period prior to employee joining date (${joining.toISOString().split('T')[0]})`);
+      err.statusCode = 400;
+      throw err;
+    }
+  }
 
   const absentDays = await computeAbsentDays(employeeId, month, year);
   

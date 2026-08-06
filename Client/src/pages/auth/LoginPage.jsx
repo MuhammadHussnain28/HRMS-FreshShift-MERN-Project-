@@ -143,12 +143,12 @@ export default function LoginPage() {
           </form>
 
           {/* Quick Demo Credentials Reminder */}
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+          {/* <div className="mt-8 pt-6 border-t border-slate-100 text-center">
             <p className="text-xs text-slate-500 font-medium mb-1">Demo Credentials:</p>
             <p className="text-xs font-mono text-slate-600 bg-slate-100 p-2 rounded-lg">
               admin@freshshifts.com • AdminPass123!
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
