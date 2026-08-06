@@ -1,11 +1,171 @@
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPayrollHistory } from '../../redux/slices/payrollSlice';
+import axiosInstance from '../../lib/axiosInstance';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { 
+  Wallet, 
+  Download, 
+  FileText, 
+  Calendar, 
+  BadgeDollarSign, 
+  Loader2, 
+  AlertCircle 
+} from 'lucide-react';
 
 export default function PayrollPage() {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { history: payrolls, status, error } = useSelector((state) => state.payroll);
+
+  const [downloadingId, setDownloadingId] = useState(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(getPayrollHistory(user.id));
+    }
+  }, [dispatch, user]);
+
+  // Direct Blob PDF Download Pattern (Section 8 Exception)
+  const handleDownloadPdf = async (payroll) => {
+    setDownloadingId(payroll._id);
+    try {
+      const response = await axiosInstance.get(`/payroll/${payroll._id}/download`, {
+        responseType: 'blob',
+      });
+
+      // Create a temporary Blob URL and trigger browser download
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `payslip-${payroll.month}-${payroll.year}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Payslip PDF downloaded successfully!');
+    } catch (err) {
+      toast.error('Failed to download payslip PDF');
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const isLoading = status === 'loading';
+
+  const getMonthName = (monthNum) => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthNum - 1] || `Month ${monthNum}`;
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-      <h1 className="text-3xl font-semibold text-navy mb-2">Coming Soon — Payroll</h1>
-      <p className="text-muted-text mb-6">Payroll page is under construction.</p>
-      <Link to="/" className="text-teal hover:underline">← Back to Home</Link>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center gap-3 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+        <div className="p-3 bg-teal/10 border border-teal/20 text-teal rounded-2xl">
+          <Wallet className="w-6 h-6" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">My Payslips & Payroll</h1>
+          <p className="text-xs text-slate-500 mt-0.5">View your monthly salary statements and download official PDF payslips</p>
+        </div>
+      </div>
+
+      {/* History Table */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-teal" /> Generated Payslip History
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">Historical breakdown of your monthly salary statements</p>
+          </div>
+          <span className="text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1 rounded-xl">
+            Total Statements: {payrolls.length}
+          </span>
+        </div>
+
+        {isLoading ? (
+          <div className="p-12 text-center text-slate-500 flex flex-col items-center justify-center">
+            <Loader2 className="w-8 h-8 animate-spin text-teal mb-3" />
+            <p className="text-sm font-semibold">Loading payslip records...</p>
+          </div>
+        ) : error ? (
+          <div className="p-12 text-center text-red-600 flex flex-col items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-red-500 mb-3" />
+            <p className="text-base font-bold">Failed to load payslips</p>
+            <p className="text-xs text-red-500 mt-1">{error}</p>
+          </div>
+        ) : payrolls.length === 0 ? (
+          <div className="p-12 text-center text-slate-500 flex flex-col items-center justify-center">
+            <Wallet className="w-10 h-10 text-slate-300 mb-3" />
+            <p className="text-base font-bold text-slate-800">No payslips generated yet</p>
+            <p className="text-xs text-slate-400 mt-1">Your monthly payslips will appear here once generated by HR.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                  <th className="py-3.5 px-6">Pay Period</th>
+                  <th className="py-3.5 px-6">Base Salary</th>
+                  <th className="py-3.5 px-6">Unpaid Leave Days</th>
+                  <th className="py-3.5 px-6">Deductions</th>
+                  <th className="py-3.5 px-6">Net Salary</th>
+                  <th className="py-3.5 px-6 text-right">Document</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm font-medium">
+                {payrolls.map((item) => (
+                  <tr key={item._id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-teal shrink-0" />
+                        <span className="font-bold text-slate-900">
+                          {getMonthName(item.month)} {item.year}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6 text-slate-700 font-mono">
+                      ${item.baseSalary ? item.baseSalary.toLocaleString() : 0}
+                    </td>
+                    <td className="py-4 px-6 font-semibold text-slate-800">
+                      {item.unpaidLeaveDays || 0} day(s)
+                    </td>
+                    <td className="py-4 px-6 font-mono text-red-600 font-semibold">
+                      -${item.deduction ? item.deduction.toLocaleString() : 0}
+                    </td>
+                    <td className="py-4 px-6 font-extrabold text-emerald-700 text-base">
+                      ${item.netSalary ? item.netSalary.toLocaleString() : 0}
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <Button
+                        size="sm"
+                        onClick={() => handleDownloadPdf(item)}
+                        disabled={downloadingId === item._id}
+                        className="bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs px-3.5 py-1.5 flex items-center gap-1.5 ml-auto"
+                      >
+                        {downloadingId === item._id ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Download className="w-3.5 h-3.5 text-sky-400" />
+                        )}
+                        <span>Download PDF</span>
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

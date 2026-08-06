@@ -51,9 +51,9 @@ export const getLeaveRecommendation = async ({
       return parsed;
     };
 
-    // Strict 10-second timeout
+    // 15-second timeout to allow Gemini AI response on all network conditions
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('AI Request Timeout')), 10000)
+      setTimeout(() => reject(new Error('AI Request Timeout')), 15000)
     );
 
     const recommendation = await Promise.race([aiCall(), timeout]);
