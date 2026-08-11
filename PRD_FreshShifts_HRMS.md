@@ -1,11 +1,9 @@
 # Product Requirement Document (PRD)
-## FreshShifts HRMS — Next-Gen Enterprise Human Resource Management System
+## FreshShifts HRMS — Enterprise Human Resource Management System
 
 **Document Version:** 1.0.0 (Baseline Specification)  
 **Status:** Approved for Development  
-**Target Audience:** Engineering Team, Product Leadership, Quality Assurance  
-**Authors:** Product Management & System Architecture Team  
-
+  
 ---
 
 ## 1. Executive Summary & Vision
