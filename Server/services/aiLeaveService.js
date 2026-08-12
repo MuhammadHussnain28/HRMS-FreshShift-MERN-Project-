@@ -33,7 +33,7 @@ export const getLeaveRecommendation = async ({
       Respond ONLY in JSON format exactly like this:
       {
         "recommendation": "Approve" (or "Flag"),
-        "reasoning": "A one-sentence reason under 20 words."
+        "reasoning": "A one-sentence reason under 25 words."
       }
     `;
 

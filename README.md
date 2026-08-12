@@ -1,145 +1,242 @@
-# FreshShifts HRMS — Full Stack MERN Application
+# FreshShifts HRMS — Enterprise Full-Stack MERN Platform
 
-A full-featured, enterprise-grade Human Resource Management System (HRMS) built with the MERN stack (MongoDB, Express.js, React, Node.js). Designed for modern companies to manage employees, attendance, leave requests with AI recommendations, payroll calculation with PDF generation, and company broadcasts.
+A production-grade, enterprise Human Resource Management System (HRMS) built with the MERN stack (MongoDB Atlas, Express.js, React 19, Node.js 20). Designed to streamline workforce operations for small-to-medium enterprises, featuring automated attendance tracking, AI-assisted leave evaluation (via Google Gemini 1.5 Pro), automated payroll processing with PDF generation, and executive company broadcasts.
 
 ---
 
-## 🔑 Demo Credentials
+## 📄 Product Documentation
 
-Use these seeded credentials to test both roles on the live app or local instance:
+- **Product Requirement Document (PDF):** [`doc/PRD_FreshShifts_HRMS.pdf`](doc/PRD_FreshShifts_HRMS.pdf)
+- **Product Requirement Document (Markdown):** [`PRD_FreshShifts_HRMS.md`](PRD_FreshShifts_HRMS.md)
 
-| Role | Email | Password | Allowed Access |
+---
+
+## 🔑 Demo Access Credentials
+
+Use these pre-seeded accounts to evaluate the live deployment or local installation:
+
+| Role | Email Address | Password | Permitted Portal & System Access |
 |---|---|---|---|
-| **HR Administrator** | `admin@freshshifts.com` | `Admin@123` | Full Admin Operations (`/dashboard`, `/admin/*`) |
+| **HR Administrator** | `admin@freshshifts.com` | `Admin@123` | Full HR Admin Workspace (`/dashboard`, `/admin/*`) |
 | **Employee** | `ali.hassan@freshshifts.com` | `Employee@123` | Employee Workspace (`/dashboard`, `/attendance`, `/leaves`, `/payroll`) |
 | **Employee** | `sara.ahmed@freshshifts.com` | `Employee@123` | Employee Workspace |
 | **Employee** | `usman.khan@freshshifts.com` | `Employee@123` | Employee Workspace |
 
 ---
 
-## 🛠️ Technology Stack
+## 📐 Entity Relationship Diagram (ERD)
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19, Redux Toolkit, Tailwind CSS v4, Lucide Icons, Recharts, Framer Motion |
-| **Backend** | Node.js 20 (ES Modules), Express.js, MongoDB Atlas + Mongoose ODM |
-| **Authentication** | JWT (Access + Refresh Token Rotation in Redux & HTTP interceptor) |
-| **AI Integration** | Google Gemini 1.5 Pro (Automated Leave Recommendations) |
-| **PDF Generation** | PDFKit (Direct Blob Download Stream) |
-| **Security & Logging** | Helmet, CORS, Rate-Limiting, NoSQL Sanitization, Winston + Morgan |
-| **Testing** | Jest, Supertest, mongodb-memory-server |
+The following relational model represents the core database schemas and relationships implemented in MongoDB via Mongoose ORM:
+
+```mermaid
+erDiagram
+    USER ||--o{ ATTENDANCE : "logs daily"
+    USER ||--o{ LEAVE : "submits requests"
+    USER ||--o{ LEAVE : "decides (HR Admin)"
+    USER ||--o{ PAYROLL : "receives monthly"
+    USER ||--o{ PAYROLL : "generates (HR Admin)"
+    USER ||--o{ ANNOUNCEMENT : "publishes (HR Admin)"
+    USER ||--o{ AUDIT_LOG : "triggers system action"
+
+    USER {
+        ObjectId _id PK
+        string name
+        string email UK
+        string password
+        string role "employee | hr_admin"
+        string department
+        string designation
+        string phone
+        date joiningDate
+        number monthlySalary
+        string employmentStatus "active | inactive | terminated"
+        string refreshTokenHash
+        date createdAt
+        date updatedAt
+    }
+
+    ATTENDANCE {
+        ObjectId _id PK
+        ObjectId employee FK
+        string date "YYYY-MM-DD"
+        date clockIn
+        date clockOut
+        string status "present | absent | half_day | on_leave"
+    }
+
+    LEAVE {
+        ObjectId _id PK
+        ObjectId employee FK
+        string leaveType "casual | sick | annual"
+        date startDate
+        date endDate
+        number numberOfDays
+        string reason
+        string status "pending | approved | rejected"
+        object aiRecommendation "recommendation | confidenceScore | reasoning"
+        ObjectId decidedBy FK
+        date decidedAt
+    }
+
+    PAYROLL {
+        ObjectId _id PK
+        ObjectId employee FK
+        number month
+        number year
+        number baseSalary
+        number unpaidLeaveDays
+        number deduction
+        number netSalary
+        ObjectId generatedBy FK
+        date createdAt
+    }
+
+    ANNOUNCEMENT {
+        ObjectId _id PK
+        string title
+        string message
+        ObjectId author FK
+        date createdAt
+        date updatedAt
+    }
+
+    AUDIT_LOG {
+        ObjectId _id PK
+        ObjectId user FK
+        string action
+        string targetType
+        string targetId
+        object details
+        date createdAt
+    }
+```
 
 ---
 
-## ✨ Features Overview
+## 🛠️ Technology Stack & Architecture
 
-### 1. 🛡️ Authentication & Role-Based Access Control (RBAC)
-- Token refresh flow: Silent refresh on 401 via Axios interceptors.
-- Route guards: `ProtectedRoute`, `PublicRoute`, and `RoleRoute`.
-
-### 2. 👥 Employee Management
-- Complete onboarding modal flow with automatic password generator.
-- Soft-delete termination state preserving historical records.
-
-### 3. ⏱️ Attendance Engine
-- Timezone-aware clock-in / clock-out card with live shift duration timer.
-- Duplicate clock-in prevention per calendar day.
-
-### 4. 🌴 Leave System & AI Assistant
-- Interactive leave application with dynamic balance tracking.
-- Google Gemini AI recommendations analyzing attendance history and leave overlapping.
-- HR decision queue with animated card exit transitions.
-
-### 5. 💵 Payroll Engine & Payslip PDFs
-- Dynamic absent-day deduction calculation (joining-date aware).
-- Direct PDF binary stream download for payslips.
-- Duplicate payroll generation conflict prevention (`409 Conflict`).
-
-### 6. 📢 Company Newsroom / Announcements
-- Executive newsroom feed with soft fade-in item animations.
-- Admin CRUD permissions with full accessibility audit compliance (`aria-labels`).
+| Layer | System Component / Library | Technical Description |
+|---|---|---|
+| **Frontend UI** | React 19 + Vite | SPA compiled architecture with zero-page-reload routing |
+| **State Management** | Redux Toolkit | Centralized slice management (`auth`, `employees`, `attendance`, `leave`, `payroll`) |
+| **Styling & Design** | Tailwind CSS v4 + DM Sans | Locked palette tokens (`Navy #0F172A`, `Teal #0284C7`), responsive layouts |
+| **Animation Scope** | Framer Motion | Strict 5-moment bounded motion architecture for peak UI performance |
+| **Backend API** | Node.js 20 + Express.js | Modular controller/service design with Vercel serverless integration |
+| **Database** | MongoDB Atlas + Mongoose | Scalable cloud database with compound unique indices and schema validation |
+| **Authentication** | Dual-Token JWT System | Short-lived Access Token (15m in Redux) + Long-lived Refresh Token (7d hashed in DB) |
+| **AI Integration** | Google Gemini 1.5 Pro | Automated leave recommendation engine with 15s `Promise.race` timeout fallback |
+| **PDF Generation** | PDFKit | Server-side binary PDF stream generation (`responseType: 'blob'`) |
+| **Security & Logging** | Helmet, CORS, MongoSanitize, Winston | Hardened HTTP headers, NoSQL injection prevention, serverless-safe logging |
 
 ---
 
-## 📁 Repository Structure
+## ✨ Key Production-Grade Features
+
+### 1. 🛡️ Silent Token Refresh (Axios HTTP Interceptor)
+- Short-lived Access Tokens (15 mins) reside exclusively in Redux memory (never in `localStorage`).
+- When an API request returns `401 Unauthorized`, the Axios interceptor queues pending requests, silently dispatches `POST /api/auth/refresh-token`, updates the token, and replays requests without user disruption.
+
+### 2. 🤖 Contextual AI Leave Support & Privacy Rules
+- Passes 30-day attendance trends, active leave balances, and team overlap metrics to Google Gemini AI.
+- **Privacy Scoping Rule:** AI recommendation badges are **strictly restricted to HR Admin decision views** (`/admin/leaves`) and hidden from employee views.
+- **Graceful Degradation:** Wrapped in a 15-second `Promise.race` timeout fallback to prevent serverless function hangs.
+
+### 3. 💵 Payroll Engine & Joining-Date Validation Guard
+- Deducts unpaid absence days based on daily rate formula ($\text{Net Salary} = \text{Base Salary} - (\text{Daily Rate} \times \text{Unpaid Absences})$).
+- Rejects payroll generation for pay periods prior to an employee's `joiningDate` with a `400 Bad Request`.
+- Enforces compound index `(employee, month, year)` to block duplicate payroll runs (`409 Conflict`).
+
+### 4. ⏱️ Timezone-Aware Attendance Engine
+- Normalizes all calendar operations to `APP_TIMEZONE` (`Asia/Karachi`) to prevent midnight UTC boundary bugs.
+- Prevents duplicate clock-ins on the same calendar date.
+
+---
+
+## 📁 Repository Monorepo Structure
 
 ```
 HRMS-FreshShift-MERN-Project-/
-├── Client/                  # Vite + React Frontend
+├── Client/                  # React + Vite Frontend Application
 │   ├── src/
+│   │   ├── app/             # Redux store configuration
 │   │   ├── components/      # UI components (attendance, layout, shared, ui)
-│   │   ├── pages/           # Screen pages (auth, dashboard, employees, leaves, payroll, announcements)
-│   │   ├── redux/           # Redux Toolkit store & slices
-│   │   └── lib/             # Axios instance & Zod validators
+│   │   ├── pages/           # Screen views (auth, dashboard, employees, leaves, payroll)
+│   │   ├── redux/           # Redux slices (auth, employee, attendance, leave, payroll)
+│   │   └── lib/             # Axios instance & validators
+│   ├── index.html
 │   └── package.json
-└── Server/                  # Node.js + Express Backend
-    ├── config/              # Database, timezone, policies
+└── Server/                  # Node.js + Express Backend Service
+    ├── config/              # DB connection, environment variables, timezone
     ├── controllers/         # Thin HTTP request handlers
-    ├── models/              # Mongoose schemas
+    ├── middlewares/         # verifyToken, authorize, errorHandler, rateLimiter
+    ├── models/              # Mongoose schemas (User, Attendance, Leave, Payroll, AuditLog)
     ├── routes/              # Express API endpoints
-    ├── services/            # Core business logic & AI integration
-    ├── seed.js              # Database seeder script
+    ├── services/            # Core business & AI recommendation logic
+    ├── seed.js              # Initial database seeder
+    ├── vercel.json          # Vercel serverless deployment rewrite configuration
     └── package.json
 ```
 
 ---
 
-## 🚀 Local Development Setup
+## 🌐 API Endpoint Specification Matrix
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/MuhammadHussnain28/HRMS-FreshShift-MERN-Project-.git
-cd HRMS-FreshShift-MERN-Project-
-```
+| Method | Endpoint Path | Access Guard | Description |
+|---|---|---|---|
+| **GET** | `/api/health` | Public | System health check endpoint |
+| **POST** | `/api/auth/login` | Public | Authenticate user & return tokens |
+| **POST** | `/api/auth/refresh-token` | Public | Rotate refresh token for new access token |
+| **POST** | `/api/auth/logout` | Authenticated | Revoke refresh token & invalidate session |
+| **GET** | `/api/employees` | HR Admin | List all employees in roster |
+| **POST** | `/api/auth/register` | HR Admin | Onboard new employee with generated credentials |
+| **GET** | `/api/employees/me` | Authenticated | Retrieve self profile data |
+| **PUT** | `/api/employees/:id` | HR Admin | Update employee record |
+| **DELETE** | `/api/employees/:id` | HR Admin | Soft-delete (terminate) employee account |
+| **POST** | `/api/attendance/clock-in` | Authenticated | Record daily clock-in |
+| **POST** | `/api/attendance/clock-out` | Authenticated | Record daily clock-out |
+| **GET** | `/api/attendance/me` | Authenticated | Retrieve self attendance history |
+| **GET** | `/api/attendance` | HR Admin | Audit all workforce attendance logs |
+| **POST** | `/api/leaves` | Authenticated | Submit leave application |
+| **GET** | `/api/leaves/me` | Authenticated | Retrieve self leave history |
+| **GET** | `/api/leaves` | HR Admin | Retrieve all pending/historical leave requests |
+| **PUT** | `/api/leaves/:id/decision` | HR Admin | Approve/Reject leave with decision logging |
+| **POST** | `/api/payroll/generate` | HR Admin | Compute absent deductions & generate payroll |
+| **GET** | `/api/payroll/:employeeId` | Owner / HR Admin | Retrieve payroll history |
+| **GET** | `/api/payroll/:id/download` | Owner / HR Admin | Stream PDF payslip blob |
+| **GET** | `/api/announcements` | Authenticated | Fetch active company announcements |
+| **POST** | `/api/announcements` | HR Admin | Publish new company broadcast |
 
-### 2. Configure Backend (`Server`)
+---
+
+## 🚀 Local Installation & Setup
+
+### 1. Backend (`Server`) Setup
 ```bash
 cd Server
 npm install
 cp .env.example .env
-```
-Fill `.env` with your MongoDB URI and Gemini API Key:
-```env
-PORT=5000
-MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/hrms
-JWT_ACCESS_SECRET=your_access_secret_min_32_chars
-JWT_REFRESH_SECRET=your_refresh_secret_min_32_chars
-AI_API_KEY=your_google_gemini_api_key
-CORS_ORIGIN=http://localhost:5173
-```
-Seed database & start backend:
-```bash
+# Configure MONGO_URI, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, AI_API_KEY
 npm run seed
 npm start
 ```
 
-### 3. Configure Frontend (`Client`)
-Open a new terminal tab:
+### 2. Frontend (`Client`) Setup
 ```bash
 cd Client
 npm install
 cp .env.example .env
-```
-Ensure `VITE_API_BASE_URL` matches backend:
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
-Start development server:
-```bash
+# Set VITE_API_BASE_URL=http://localhost:5000/api
 npm run dev
 ```
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & CI/CD Pipeline
 
-To run the backend integration test suite (uses in-memory MongoDB):
-```bash
-cd Server
-npm test
-```
+- **Automated CI Pipeline:** Managed via GitHub Actions (`.github/workflows/ci.yml`). Runs Jest integration unit tests (`npm test`) on Node 20 environment upon push/PR to `main`.
+- **Continuous Deployment (CD):** Managed via Vercel serverless integration triggering automatic zero-downtime builds upon passed CI checks.
 
 ---
 
 ## 📄 License
-This application is developed as part of the FreshShifts HRMS capstone project.
+Developed for the FreshShifts HRMS capstone project. All rights reserved.

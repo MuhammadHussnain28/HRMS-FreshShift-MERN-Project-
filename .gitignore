@@ -5,3 +5,10 @@ logs/
 *.log
 .agents/
 .antigravity/
+
+# Internal development specs (Local Only)
+BACKEND_SPEC.md
+FRONTEND_SPEC.md
+frontend_rules.md
+PRD_FreshShifts_HRMS.md
+Client/README.md
