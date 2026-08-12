@@ -7,7 +7,6 @@ A production-grade, enterprise Human Resource Management System (HRMS) built wit
 ## 📄 Product Documentation
 
 - **Product Requirement Document (PDF):** [`doc/PRD_FreshShifts_HRMS.pdf`](doc/PRD_FreshShifts_HRMS.pdf)
-- **Product Requirement Document (Markdown):** [`PRD_FreshShifts_HRMS.md`](PRD_FreshShifts_HRMS.md)
 
 ---
 
