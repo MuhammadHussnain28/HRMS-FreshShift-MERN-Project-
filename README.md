@@ -1,6 +1,7 @@
 # FreshShifts HRMS — Enterprise Full-Stack MERN Platform
 
 A production-grade, enterprise Human Resource Management System (HRMS) built with the MERN stack (MongoDB Atlas, Express.js, React 19, Node.js 20). Designed to streamline workforce operations for small-to-medium enterprises, featuring automated attendance tracking, AI-assisted leave evaluation (via Google Gemini 1.5 Pro), automated payroll processing with PDF generation, and executive company broadcasts.
+For testing , There are some fake credentials below.
 
 ---
 
