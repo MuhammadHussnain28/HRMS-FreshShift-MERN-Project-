@@ -39,6 +39,7 @@ function AppContent() {
   );
 }
 
+// App Component
 export default function App() {
   return (
     <Provider store={store}>
